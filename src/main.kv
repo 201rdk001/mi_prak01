@@ -1,0 +1,26 @@
+<PaddedBoxLayout@BoxLayout>:
+    padding: 10
+    spacing: 10
+
+<MainGameLayout>:
+    orientation: 'vertical'
+    padding: 20
+
+    AnchorLayout:
+        PaddedBoxLayout:
+            size_hint_y: None
+            height: 50
+
+            Label:
+                text: 'Norādīet spēles garumu:'
+                size_hint_x: None
+                width: 180
+
+            TextInput:
+                input_filter: 'int'
+                multiline: False
+    PaddedBoxLayout:
+        Button:
+            text: 'Spēlēt ar apļiem'
+        Button:
+            text: 'Spēlēt ar krustiem'
