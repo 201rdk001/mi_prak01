@@ -1,7 +1,7 @@
 # Makslīga intelekta pamati: pirmais praktiskais darbs
 
 Minimālā Python versija: 3.11  
-Minimālā Kivy versija: jaunākā (2.3.0)
+Minimālā wxPython versija: jaunākā (4.2.1)
 
 ### Izstrādes vides uzstādīšana
 
@@ -17,9 +17,9 @@ Uz MacOS/Linux/Citi - no Jūsu noklusētās komandrindas čaulas: ```python -m p
 
 ### Noderīgas saites
 
-Kivy dokumentācija:  
-https://kivy.org/doc/stable/  
-https://kivy.org/doc/stable/api-kivy.html
+[https://wiki.wxpython.org/](https://wiki.wxpython.org/) - Visparīgs info par wxPython pielietošanu
+[https://docs.wxpython.org/](https://docs.wxpython.org/) - Info par atseviškiem wxPython bibliotēkas moduļiem
+[https://github.com/wxFormBuilder/wxFormBuilder/releases](https://github.com/wxFormBuilder/wxFormBuilder/releases) - Lietotāja saskarnes veidošanas rīks
 
 ### Citi izstrādes ieteikumi
 
