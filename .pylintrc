@@ -1,0 +1,9 @@
+[MAIN]
+
+disable=
+    import-error,
+    no-member,
+    no-method-argument,
+    missing-docstring,
+    protected-access,
+    too-few-public-methods,
