@@ -122,6 +122,7 @@ class GameStartDialog(ui_generated.GameStartDialog):
             self.get_selected_player_type(),
             self.get_selected_algorithm())
 
+        game.temp_get_game_state()  # Generate game state
         self.Parent.init_game_field(game.temp_get_game_state())
         self.Hide()
         event.Skip()
