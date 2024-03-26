@@ -79,6 +79,9 @@ class MainWindow ( wx.Frame ):
         bSizer2.Add( self.perform_move_button, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
         self.new_game_button = wx.Button( self, wx.ID_ANY, u"Sākt jaunu spēli", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.new_game_button.Enable( False )
+        self.new_game_button.Hide()
+
         bSizer2.Add( self.new_game_button, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
 
@@ -188,16 +191,15 @@ class GameStartDialog ( wx.Dialog ):
 
 
 ###########################################################################
-## Class GameOver
+## Class GameOverDialog
 ###########################################################################
 
-class GameOver ( wx.Frame ):
+class GameOverDialog ( wx.Dialog ):
 
     def __init__( self, parent ):
-        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 640,240 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 640,240 ), style = wx.DEFAULT_DIALOG_STYLE )
 
         self.SetSizeHints( wx.Size( 640,240 ), wx.DefaultSize )
-        self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_MENU ) )
 
         bSizer4 = wx.BoxSizer( wx.VERTICAL )
 

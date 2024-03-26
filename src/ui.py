@@ -11,6 +11,7 @@ class MainWindow(ui_generated.MainWindow):
         self.game_complete = True
         self.Show()
 
+        self.game_over_dialog = GameOverDialog(self)
         self.start_dialog = GameStartDialog(self)
         self.start_dialog.Show()
 
@@ -103,11 +104,8 @@ class MainWindow(ui_generated.MainWindow):
 
     def on_game_completed(self):
         self.game_complete = True
-        print("done")
-        self.Hide()
-        self.GameOverFrame = GameOver(self)
-        self.GameOverFrame.Show()
         # Game completion code here
+        self.game_over_dialog.ShowModal()
 
 class GameStartDialog(ui_generated.GameStartDialog):
     def get_selected_player_type(self):
@@ -132,18 +130,11 @@ class GameStartDialog(ui_generated.GameStartDialog):
         self.Hide()
         event.Skip()
 
-class GameOver(ui_generated.GameOver):
-        def __init__(self, parent):
-            ui_generated.GameOver.__init__(self, parent)
-        def init_game_field(self, state):
-            game_field = self.game_field_panel.GetSizer().GetChildren()[0].Sizer
-            game_field.Clear(True)
-            
-        def on_new_game_clicked(self, event):
-            self.main_window = MainWindow(self)
-            self.main_window.Show()
-            self.start_dialog = GameStartDialog(self)
-            self.start_dialog.Show()
-            self.Hide()
-            event.Skip()
-           
+class GameOverDialog(ui_generated.GameOverDialog):
+    def __init__(self, parent):
+        ui_generated.GameOverDialog.__init__(self, parent)
+
+    def on_new_game_clicked(self, event):
+        self.Hide()
+        self.Parent.start_dialog.Show()
+        event.Skip()
