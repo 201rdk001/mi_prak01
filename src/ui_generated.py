@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ###########################################################################
-## Python code generated with wxFormBuilder (version 4.1.0-0-g733bf3d-dirty)
+## Python code generated with wxFormBuilder (version 4.1.0-0-g733bf3d)
 ## http://www.wxformbuilder.org/
 ##
 ## PLEASE DO *NOT* EDIT THIS FILE!
@@ -184,6 +184,76 @@ class GameStartDialog ( wx.Dialog ):
 
     # Virtual event handlers, override them in your derived class
     def on_start_game_clicked( self, event ):
+        event.Skip()
+
+
+###########################################################################
+## Class GameOver
+###########################################################################
+
+class GameOver ( wx.Frame ):
+
+    def __init__( self, parent ):
+        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 640,240 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+
+        self.SetSizeHints( wx.Size( 640,240 ), wx.DefaultSize )
+        self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_MENU ) )
+
+        bSizer4 = wx.BoxSizer( wx.VERTICAL )
+
+        bSizer7 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.m_staticText2 = wx.StaticText( self, wx.ID_ANY, u"SPĒLES BEIGAS!", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText2.Wrap( -1 )
+
+        bSizer7.Add( self.m_staticText2, 0, wx.ALL, 5 )
+
+
+        bSizer4.Add( bSizer7, 1, wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
+        bSizer15 = wx.BoxSizer( wx.VERTICAL )
+
+        self.m_staticText4 = wx.StaticText( self, wx.ID_ANY, u"Uzvarēja :", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTER_HORIZONTAL )
+        self.m_staticText4.Wrap( -1 )
+
+        bSizer15.Add( self.m_staticText4, 0, wx.ALL, 5 )
+
+
+        bSizer4.Add( bSizer15, 1, wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
+        bSizer16 = wx.BoxSizer( wx.VERTICAL )
+
+        self.m_staticText3 = wx.StaticText( self, wx.ID_ANY, u"Zaudēja :", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTER_HORIZONTAL )
+        self.m_staticText3.Wrap( -1 )
+
+        bSizer16.Add( self.m_staticText3, 0, wx.ALL, 5 )
+
+
+        bSizer4.Add( bSizer16, 1, wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
+        bSizer5 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.m_button2 = wx.Button( self, wx.ID_ANY, u"Sākt jaunu spēli", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer5.Add( self.m_button2, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+
+        bSizer4.Add( bSizer5, 1, wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
+
+        self.SetSizer( bSizer4 )
+        self.Layout()
+
+        self.Centre( wx.BOTH )
+
+        # Connect Events
+        self.m_button2.Bind( wx.EVT_BUTTON, self.on_new_game_clicked )
+
+    def __del__( self ):
+        pass
+
+
+    # Virtual event handlers, override them in your derived class
+    def on_new_game_clicked( self, event ):
         event.Skip()
 
 
