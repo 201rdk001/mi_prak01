@@ -14,14 +14,17 @@ class MainWindow(ui_generated.MainWindow):
         self.start_dialog = GameStartDialog(self)
         self.start_dialog.Show()
 
-    def get_game_field(self):
-        return self.game_field_panel.GetSizer().GetChildren()[0].Sizer
+    def button_index(self, button):
+        return self.game_field_panel.GetChildren().index(button)
 
-    def init_game_field(self, game_str: str):
-        game_field = self.get_game_field()
+    def get_button(self, index):
+        return self.game_field_panel.GetChildren()[index]
+
+    def init_game_field(self, state):
+        game_field = self.game_field_panel.GetSizer().GetChildren()[0].Sizer
         game_field.Clear(True)
 
-        for character in game_str:
+        for character in state:
             button = wx.ToggleButton(
                 self.game_field_panel,
                 label=character,
@@ -122,7 +125,6 @@ class GameStartDialog(ui_generated.GameStartDialog):
             self.get_selected_player_type(),
             self.get_selected_algorithm())
 
-        game.temp_get_game_state()  # Generate game state
         self.Parent.init_game_field(game.temp_get_game_state())
         self.Hide()
         event.Skip()
