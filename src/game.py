@@ -13,26 +13,6 @@ class GameAlgorithm(enum.Enum):
     MINIMAX = 0
     ALFABETA = 1
 
-#edited by Ritvars--------
-class TreeNode:
-    def __init__(self, state, player_type):
-        self.state = state
-        self.player_type = player_type
-        self.children = []
-
-def generate_tree(node, depth):
-    if depth <= 0:
-        return
-
-    for i in range(len(node.state) - 1):
-        if node.state[i] != node.state[i+1]:
-            new_state = node.state[:i] + node.player_type.value + node.state[i+2:]
-            new_player_type = PlayerType.CIRCLE if node.player_type == PlayerType.CROSS else PlayerType.CROSS
-            child = TreeNode(new_state, new_player_type)
-            node.children.append(child)
-            generate_tree(child, depth - 1)
-#------------
-
 def set_settings(length: int, player: PlayerType, algorithm: GameAlgorithm):
     global game_state
     global game_length
