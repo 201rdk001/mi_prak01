@@ -20,7 +20,12 @@ def generate_tree_graph(n, i=0, graph=''):
     else:
         state= n.state
 
-    graph += f'n{i} [label=<{n.circle_points}|{state}|{n.cross_points}>]\n'
+    label = f'{n.circle_points}|{state}|{n.cross_points}|@{n.player}'
+
+    if type(n).__name__ == 'MinimaxNode':
+        label += f'|{n.heuristic_value}'
+
+    graph += f'n{i} [label=<{label}>]\n'
 
     ni = i + 1
     for c in n.children:
@@ -33,9 +38,24 @@ def generate_tree_graph(n, i=0, graph=''):
 
     return graph, ni
 
-# Example usage:
-root_state = 'XXOOXOOX'
-root_player_type = 'O'
-root_node = TreeNode(root_state, root_player_type)
-generate_tree(root_node, 1)
-print(generate_tree_graph(root_node))
+def debug_heuristic1(node, opponent):
+    circle_points = node.circle_points
+    cross_points = node.cross_points
+
+    if opponent == 'X':
+        return circle_points - cross_points
+    elif opponent == 'O':
+        return cross_points - circle_points
+
+def debug_heuristic2(node, opponent):
+    return max(min(debug_heuristic1(node, opponent), 1), -1)
+
+def run_example():
+    root_state = 'XXOOXOOX'
+    root_player_type = 'O'
+    root_node = TreeNode(root_state, root_player_type)
+    generate_tree(root_node, 1)
+    print(generate_tree_graph(root_node))
+
+if __name__ == '__main__':
+    run_example()

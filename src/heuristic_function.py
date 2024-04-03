@@ -14,7 +14,7 @@ def heuristic_function(node, opponent):
     state = node.state
     circle_points = node.circle_points
     cross_points = node.cross_points
-    player_type = node.player_type
+    player_type = node.player
     opposite_player = opponent
     heuristic_value = 0
 

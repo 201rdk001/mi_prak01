@@ -1,6 +1,5 @@
 import random
 
-
 class Game:
     def __init__(self, length, algorithm):
         self.player = 'O'
@@ -13,7 +12,7 @@ class Game:
         self.cross_points = 0
 
     def get_opponent(self):
-        return 'X' if self.player == 'O' else 'O'
+        return get_opponent(self.player)
 
     def execute_move(self, index):
         move = self.state[index:index+2]
@@ -37,3 +36,6 @@ class Game:
     def generate_computer_move(self):
         # Temporary dummy implementation
         return self.state.find(self.get_opponent())
+
+def get_opponent(player):
+    return 'X' if player == 'O' else 'O'
