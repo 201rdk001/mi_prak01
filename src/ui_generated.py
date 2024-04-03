@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ###########################################################################
-## Python code generated with wxFormBuilder (version 4.1.0-0-g733bf3d)
+## Python code generated with wxFormBuilder (version 4.1.0-0-g733bf3d-dirty)
 ## http://www.wxformbuilder.org/
 ##
 ## PLEASE DO *NOT* EDIT THIS FILE!
@@ -79,9 +79,6 @@ class MainWindow ( wx.Frame ):
         bSizer2.Add( self.perform_move_button, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
         self.new_game_button = wx.Button( self, wx.ID_ANY, u"Sākt jaunu spēli", wx.DefaultPosition, wx.DefaultSize, 0 )
-        self.new_game_button.Enable( False )
-        self.new_game_button.Hide()
-
         bSizer2.Add( self.new_game_button, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
 
