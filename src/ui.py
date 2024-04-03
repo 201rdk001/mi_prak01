@@ -56,7 +56,7 @@ class MainWindow(ui_generated.MainWindow):
 
             button.Value = False
 
-            if self.chosen_player != button.Label:
+            if self.game.player != button.Label:
                 button.Value = True
                 button.GetNextSibling().Value = True
                 self.active_button = button
@@ -74,7 +74,7 @@ class MainWindow(ui_generated.MainWindow):
 
         if button and button.Value:
             button.GetNextSibling().Destroy()
-            button.Label = self.chosen_player
+            button.Label = self.game.player
             button.Value = False
             self.game_field_panel.Layout()
 
