@@ -5,15 +5,14 @@ import game
 class MainWindow(ui_generated.MainWindow):
     def __init__(self, parent):
         ui_generated.MainWindow.__init__(self, parent)
-
-        self.player_type = "O"
-        self.active_button = None
-        self.game_complete = True
-        self.Show()
-
         self.game_over_dialog = GameOverDialog(self)
         self.start_dialog = GameStartDialog(self)
+        self.Show()
         self.start_dialog.Show()
+
+        self.game = None
+        self.chosen_player = None
+        self.active_button = None
 
     def button_index(self, button):
         return self.game_field_panel.GetChildren().index(button)
@@ -21,11 +20,16 @@ class MainWindow(ui_generated.MainWindow):
     def get_button(self, index):
         return self.game_field_panel.GetChildren()[index]
 
-    def init_game_field(self, state):
+    def init_game(self):
+        self.chosen_player = self.start_dialog.get_selected_player()
+        self.game = game.Game(
+            int(self.start_dialog.length_num_box.Value),
+            self.start_dialog.get_selected_algorithm())
+
         game_field = self.game_field_panel.GetSizer().GetChildren()[0].Sizer
         game_field.Clear(True)
 
-        for character in state:
+        for character in self.game.state:
             button = wx.ToggleButton(
                 self.game_field_panel,
                 label=character,
@@ -37,7 +41,6 @@ class MainWindow(ui_generated.MainWindow):
             game_field.Add(button, 0, wx.ALIGN_CENTER_VERTICAL, 5)
 
         self.game_field_panel.Layout()
-        self.game_complete = False
 
     def on_game_field_button_clicked(self, event):
         button = event.EventObject
@@ -53,7 +56,7 @@ class MainWindow(ui_generated.MainWindow):
 
             button.Value = False
 
-            if self.player_type != button.Label:
+            if self.chosen_player != button.Label:
                 button.Value = True
                 button.GetNextSibling().Value = True
                 self.active_button = button
@@ -64,69 +67,38 @@ class MainWindow(ui_generated.MainWindow):
                 self.active_button.Value = False
 
     def on_perform_move_clicked(self, event):
-        if self.game_complete:
+        if self.game.has_ended:
             return
 
         button = self.active_button
 
         if button and button.Value:
             button.GetNextSibling().Destroy()
-            button.Label = self.player_type
+            button.Label = self.chosen_player
             button.Value = False
-
-            if self.player_type == "O":
-                self.player_type = "X"
-            else:
-                self.player_type = "O"
-
-            self.active_button = None
             self.game_field_panel.Layout()
 
-        if self.is_game_complete():
-            self.on_game_completed()
+            self.active_button = None
+            self.game.execute_move(self.button_index(button))
+            if self.game.has_ended:
+                self.on_game_completed()
 
     def on_new_game_clicked(self, event):
         self.start_dialog.Show()
 
-
-    def is_game_complete(self):
-        buttons = self.game_field_panel.GetChildren()
-        count = len(buttons)
-
-        if count <= 1:
-            return True
-
-        for i in range(count - 1):
-            if buttons[i].Label != self.player_type:
-                return False
-
-        return True
-
     def on_game_completed(self):
-        self.game_complete = True
         # Game completion code here
         self.game_over_dialog.ShowModal()
 
 class GameStartDialog(ui_generated.GameStartDialog):
-    def get_selected_player_type(self):
-        if self.circle_radio_btn.Value:
-            return game.GameAlgorithm.MINIMAX
-
-        return game.GameAlgorithm.ALFABETA
+    def get_selected_player(self):
+        return 'O' if self.circle_radio_btn.Value else 'X'
 
     def get_selected_algorithm(self):
-        if self.minimax_radio_btn.Value:
-            return game.PlayerType.CIRCLE
-
-        return game.PlayerType.CROSS
+        return 'minimax' if self.minimax_radio_btn.Value else 'alfabeta'
 
     def on_start_game_clicked(self, event):
-        game.set_settings(
-            int(self.length_num_box.Value),
-            self.get_selected_player_type(),
-            self.get_selected_algorithm())
-
-        self.Parent.init_game_field(game.temp_get_game_state())
+        self.Parent.init_game()
         self.Hide()
         event.Skip()
 

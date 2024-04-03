@@ -1,33 +1,39 @@
-import enum
 import random
 
-# pylint: disable=invalid-name
-game_length = 15
-game_state = []
 
-class PlayerType(enum.Enum):
-    CIRCLE = "O"
-    CROSS = "X"
+class Game:
+    def __init__(self, length, algorithm):
+        self.player = 'O'
+        self.algorithm = algorithm
+        self.move_counter = 0
 
-class GameAlgorithm(enum.Enum):
-    MINIMAX = 0
-    ALFABETA = 1
+        self.has_ended = False
+        self.state = ''.join(random.choice(['X', 'O']) for _ in range(length))
+        self.circle_points = 0
+        self.cross_points = 0
 
-def set_settings(length: int, player: PlayerType, algorithm: GameAlgorithm):
-    global game_state
-    global game_length
+    def get_opponent(self):
+        return 'X' if self.player == 'O' else 'O'
 
-    game_length = length
-    game_state = []
+    def execute_move(self, index):
+        move = self.state[index:index+2]
 
-    print(length, player, algorithm)
-    
+        if self.player == 'O' and move == 'XX':
+            self.circle_points += 1
+        elif self.player == 'O' and move == 'XO':
+            self.cross_points -= 1
+        elif self.player == 'X' and move == 'OO':
+            self.cross_points += 1
+        elif self.player == 'X' and move == 'OX':
+            self.circle_points -= 1
+        else:
+            raise RuntimeError("Invalid game move")
 
-def temp_get_game_state():
-    if game_state:
-        return game_state
+        self.state = self.state[:index] + self.player + self.state[index+2:]
+        self.player = self.get_opponent()
+        self.move_counter += 1
+        self.has_ended = self.player not in self.state[:-1]
 
-    for _ in range(game_length):
-        game_state.append(random.choice(["X", "O"]))
-
-    return game_state
+    def generate_computer_move(self):
+        # Temporary dummy implementation
+        return self.state.find(self.get_opponent())
