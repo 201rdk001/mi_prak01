@@ -1,6 +1,8 @@
 import wx
 import ui_generated
 import game
+import time
+import threading
 
 class MainWindow(ui_generated.MainWindow):
     def __init__(self, parent):
@@ -13,6 +15,9 @@ class MainWindow(ui_generated.MainWindow):
         self.game = None
         self.chosen_player = None
         self.active_button = None
+        #gājiens button
+        self.m_toggleBtn1.SetLabel('O')
+        #punktus pielikt
 
     def button_index(self, button):
         return self.game_field_panel.GetChildren().index(button)
@@ -67,6 +72,7 @@ class MainWindow(ui_generated.MainWindow):
                 self.active_button.Value = False
 
     def on_perform_move_clicked(self, event):
+        
         if self.game.has_ended:
             return
 
@@ -80,8 +86,30 @@ class MainWindow(ui_generated.MainWindow):
 
             self.active_button = None
             self.game.execute_move(self.button_index(button))
+            #nomainīt, kuram gājiens
+            self.m_toggleBtn1.SetLabel(game.get_opponent(self.start_dialog.get_selected_player()))
+
             if self.game.has_ended:
                 self.on_game_completed()
+
+        
+    def perform_computer_move(self):
+        button = self.get_button(self.game.generate_computer_move())
+        #iezime pogas
+        button.BackgroundColour = (252, 140, 71) 
+        button.GetNextSibling().BackgroundColour = (252, 140, 71)
+        if self.game.has_ended:
+            return
+        #gaida 3sek pirms izdzēš
+        timer = threading.Timer(3.0, button.GetNextSibling().Destroy())
+        timer.start()
+        button.BackgroundColour = button.GetNextSibling().BackgroundColour
+        #button.GetNextSibling().Destroy()
+        button.Label = self.game.player
+        self.game_field_panel.Layout()
+        self.game.execute_move(self.button_index(button))
+        if self.game.has_ended:
+            self.on_game_completed()
 
     def on_new_game_clicked(self, event):
         self.start_dialog.Show()
@@ -105,7 +133,9 @@ class GameStartDialog(ui_generated.GameStartDialog):
 class GameOverDialog(ui_generated.GameOverDialog):
     def __init__(self, parent):
         ui_generated.GameOverDialog.__init__(self, parent)
-
+        self.start_dialog = GameStartDialog(self)
+        #self.m_staticText4.SetLabel("Uzvarēja: "+ self.game.get_winner())
+        #self.m_staticText3.SetLabel("Zaudēja: "+game.get_opponent(game.Game.get_winner()))
     def on_new_game_clicked(self, event):
         self.Hide()
         self.Parent.start_dialog.Show()

@@ -36,6 +36,16 @@ class Game:
     def generate_computer_move(self):
         # Temporary dummy implementation
         return self.state.find(self.get_opponent())
+    
+    def get_winner(self):
+        if self.circle_points>self.cross_points:
+            return 'O'
+        elif self.cross_points>self.circle_points:
+            return 'X'
+        else:
+            return "neizšķirts"
+        
+
 
 def get_opponent(player):
     return 'X' if player == 'O' else 'O'

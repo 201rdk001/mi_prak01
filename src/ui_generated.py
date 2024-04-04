@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ###########################################################################
-## Python code generated with wxFormBuilder (version 4.1.0-0-g733bf3d-dirty)
+## Python code generated with wxFormBuilder (version 4.1.0-0-g733bf3d)
 ## http://www.wxformbuilder.org/
 ##
 ## PLEASE DO *NOT* EDIT THIS FILE!
@@ -28,10 +28,21 @@ class MainWindow ( wx.Frame ):
 
         bSizer71 = wx.BoxSizer( wx.HORIZONTAL )
 
-        self.m_staticText2 = wx.StaticText( sbSizer1.GetStaticBox(), wx.ID_ANY, u"Krusts:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText2 = wx.StaticText( sbSizer1.GetStaticBox(), wx.ID_ANY, u"Gājiens:", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText2.Wrap( -1 )
 
         bSizer71.Add( self.m_staticText2, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+        self.m_toggleBtn1 = wx.ToggleButton( sbSizer1.GetStaticBox(), wx.ID_ANY, u"XO", wx.DefaultPosition, wx.Size( 20,20 ), 0 )
+        bSizer71.Add( self.m_toggleBtn1, 0, 0, 5 )
+
+
+        bSizer71.Add( ( 80, 0), 1, 0, 5 )
+
+        self.m_staticText21 = wx.StaticText( sbSizer1.GetStaticBox(), wx.ID_ANY, u"Krusts:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText21.Wrap( -1 )
+
+        bSizer71.Add( self.m_staticText21, 0, wx.ALIGN_LEFT|wx.ALL, 5 )
 
         self.m_staticText3 = wx.StaticText( sbSizer1.GetStaticBox(), wx.ID_ANY, u"0", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText3.Wrap( -1 )
@@ -39,7 +50,7 @@ class MainWindow ( wx.Frame ):
         bSizer71.Add( self.m_staticText3, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 
-        bSizer71.Add( ( 120, 0), 0, 0, 5 )
+        bSizer71.Add( ( 5, 0), 1, wx.EXPAND, 5 )
 
         self.m_staticText5 = wx.StaticText( sbSizer1.GetStaticBox(), wx.ID_ANY, u"Aplis:", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText5.Wrap( -1 )
@@ -52,7 +63,13 @@ class MainWindow ( wx.Frame ):
         bSizer71.Add( self.m_staticText6, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 
-        sbSizer1.Add( bSizer71, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 5 )
+        bSizer71.Add( ( 60, 0), 1, wx.EXPAND, 5 )
+
+
+        bSizer71.Add( ( 60, 0), 1, wx.EXPAND, 5 )
+
+
+        sbSizer1.Add( bSizer71, 1, wx.EXPAND, 5 )
 
 
         bSizer1.Add( sbSizer1, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
