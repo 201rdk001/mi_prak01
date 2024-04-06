@@ -18,6 +18,11 @@ class MainWindow(ui_generated.MainWindow):
         #gājiens button
         self.m_toggleBtn1.SetLabel('O')
         #punktus pielikt
+        self.game = game.Game(
+            int(self.start_dialog.length_num_box.Value),
+            self.start_dialog.get_selected_algorithm())
+        self.m_staticText3.SetLabel(str(self.game.cross_points))    #krusts
+        self.m_staticText6.SetLabel(str(self.game.circle_points))    #aplis
 
     def button_index(self, button):
         return self.game_field_panel.GetChildren().index(button)
@@ -88,12 +93,17 @@ class MainWindow(ui_generated.MainWindow):
             self.game.execute_move(self.button_index(button))
             #nomainīt, kuram gājiens
             self.m_toggleBtn1.SetLabel(game.get_opponent(self.start_dialog.get_selected_player()))
-
+            #punktus pielikt
+            self.game = game.Game(
+            int(self.start_dialog.length_num_box.Value),
+            self.start_dialog.get_selected_algorithm())
+            self.m_staticText3.SetLabel(str(self.game.cross_points))    #krusts
+            self.m_staticText6.SetLabel(str(self.game.circle_points))    #aplis
             if self.game.has_ended:
                 self.on_game_completed()
 
         
-    def perform_computer_move(self):
+    def perform_computer_move(self,event):
         button = self.get_button(self.game.generate_computer_move())
         #iezime pogas
         button.BackgroundColour = (252, 140, 71) 
@@ -101,13 +111,22 @@ class MainWindow(ui_generated.MainWindow):
         if self.game.has_ended:
             return
         #gaida 3sek pirms izdzēš
-        timer = threading.Timer(3.0, button.GetNextSibling().Destroy())
-        timer.start()
-        button.BackgroundColour = button.GetNextSibling().BackgroundColour
-        #button.GetNextSibling().Destroy()
+        #timer = threading.Timer(3.0, button.GetNextSibling().Destroy())
+        #timer.start()
+        #button.BackgroundColour = button.GetNextSibling().BackgroundColour
+        button.GetNextSibling().Destroy()
         button.Label = self.game.player
+        button.style=wx.BORDER_NONE
         self.game_field_panel.Layout()
         self.game.execute_move(self.button_index(button))
+        #nomainīt, kuram gājiens
+        self.m_toggleBtn1.SetLabel(self.start_dialog.get_selected_player())
+        #punktus pielikt
+        self.game = game.Game(
+            int(self.start_dialog.length_num_box.Value),
+            self.start_dialog.get_selected_algorithm())
+        self.m_staticText3.SetLabel(str(self.game.cross_points))    #krusts
+        self.m_staticText6.SetLabel(str(self.game.circle_points))    #aplis
         if self.game.has_ended:
             self.on_game_completed()
 
@@ -134,8 +153,8 @@ class GameOverDialog(ui_generated.GameOverDialog):
     def __init__(self, parent):
         ui_generated.GameOverDialog.__init__(self, parent)
         self.start_dialog = GameStartDialog(self)
-        #self.m_staticText4.SetLabel("Uzvarēja: "+ self.game.get_winner())
-        #self.m_staticText3.SetLabel("Zaudēja: "+game.get_opponent(game.Game.get_winner()))
+        self.m_staticText4.SetLabel("Uzvarēja: "+ str(game.get_opponent(game.get_opponent(game.Game.get_winner))))
+        self.m_staticText3.SetLabel("Zaudēja: "+str(game.get_opponent(game.Game.get_winner)))
     def on_new_game_clicked(self, event):
         self.Hide()
         self.Parent.start_dialog.Show()

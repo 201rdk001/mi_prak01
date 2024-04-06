@@ -34,6 +34,7 @@ class MainWindow ( wx.Frame ):
         bSizer71.Add( self.m_staticText2, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
         self.m_toggleBtn1 = wx.ToggleButton( sbSizer1.GetStaticBox(), wx.ID_ANY, u"XO", wx.DefaultPosition, wx.Size( 20,20 ), 0 )
+        self.m_toggleBtn1.SetValue( True )
         bSizer71.Add( self.m_toggleBtn1, 0, 0, 5 )
 
 
@@ -44,7 +45,7 @@ class MainWindow ( wx.Frame ):
 
         bSizer71.Add( self.m_staticText21, 0, wx.ALIGN_LEFT|wx.ALL, 5 )
 
-        self.m_staticText3 = wx.StaticText( sbSizer1.GetStaticBox(), wx.ID_ANY, u"0", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText3 = wx.StaticText( sbSizer1.GetStaticBox(), wx.ID_ANY, u"Xp", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText3.Wrap( -1 )
 
         bSizer71.Add( self.m_staticText3, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
@@ -57,7 +58,7 @@ class MainWindow ( wx.Frame ):
 
         bSizer71.Add( self.m_staticText5, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-        self.m_staticText6 = wx.StaticText( sbSizer1.GetStaticBox(), wx.ID_ANY, u"0", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText6 = wx.StaticText( sbSizer1.GetStaticBox(), wx.ID_ANY, u"Op", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText6.Wrap( -1 )
 
         bSizer71.Add( self.m_staticText6, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
@@ -108,6 +109,7 @@ class MainWindow ( wx.Frame ):
         self.Centre( wx.BOTH )
 
         # Connect Events
+        self.m_toggleBtn1.Bind( wx.EVT_TOGGLEBUTTON, self.perform_computer_move )
         self.perform_move_button.Bind( wx.EVT_BUTTON, self.on_perform_move_clicked )
         self.new_game_button.Bind( wx.EVT_BUTTON, self.on_new_game_clicked )
 
@@ -116,6 +118,9 @@ class MainWindow ( wx.Frame ):
 
 
     # Virtual event handlers, override them in your derived class
+    def perform_computer_move( self, event ):
+        event.Skip()
+
     def on_perform_move_clicked( self, event ):
         event.Skip()
 
@@ -271,5 +276,3 @@ class GameOverDialog ( wx.Dialog ):
     # Virtual event handlers, override them in your derived class
     def on_new_game_clicked( self, event ):
         event.Skip()
-
-

@@ -40,7 +40,7 @@ class Game:
     def get_winner(self):
         if self.circle_points>self.cross_points:
             return 'O'
-        elif self.cross_points>self.circle_points:
+        elif self.circle_points<self.cross_points:
             return 'X'
         else:
             return "neizšķirts"
