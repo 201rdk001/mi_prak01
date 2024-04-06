@@ -104,12 +104,14 @@ class MainWindow(ui_generated.MainWindow):
 
         
     def perform_computer_move(self,event):
+        
+        if self.game.has_ended:
+            return
+        
         button = self.get_button(self.game.generate_computer_move())
         #iezime pogas
         button.BackgroundColour = (252, 140, 71) 
         button.GetNextSibling().BackgroundColour = (252, 140, 71)
-        if self.game.has_ended:
-            return
         #gaida 3sek pirms izdzēš
         #timer = threading.Timer(3.0, button.GetNextSibling().Destroy())
         #timer.start()
