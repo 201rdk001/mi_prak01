@@ -2,7 +2,8 @@ def get_opponent(player):
     return 'X' if player == 'O' else 'O'
 
 import random
-import minimax
+from minimax import Minimax
+from alfabeta import Alfabeta
 
 class Game:
     def __init__(self, length, algorithm):
@@ -15,9 +16,9 @@ class Game:
         self.cross_points = 0
 
         if algorithm == 'minimax':
-            self.algorithm = minimax.Minimax(self)
+            self.algorithm = Minimax(self)
         else:
-            raise RuntimeError("Alfabeta not implemented")
+            self.algorithm = Alfabeta(self)
 
     def get_opponent(self):
         return get_opponent(self.player)

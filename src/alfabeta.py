@@ -4,18 +4,18 @@ from heuristic_function import heuristic_function
 
 TREE_DEPTH = 7
 
-class Alfa_Beta(TreeNode):
+class AlfabetaNode(TreeNode):
     def __init__(self, state, player, parent=None):
         TreeNode.__init__(self, state, player, parent)
         self.heuristic_value = None
 
-class Alfa_Beta:
+class Alfabeta:
     def __init__(self, game):
         self.game = game
 
         self.root = None
         self.leafs = []
-        self.path: list[MinimaxNode] = None
+        self.path = None
 
     def generate_move(self):
         if not self.root or not self.was_expected_move(self.path.pop()):
@@ -31,10 +31,13 @@ class Alfa_Beta:
             self.game.circle_points == expected.circle_points and \
             self.game.cross_points == expected.cross_points
 
+    def calc_tree_depth(self):
+        return 5 if len(self.game.state) < 20 else 4
+
     def run_algorithm(self):
         # Izveido saknes mezglu un koku
-        self.root = MinimaxNode(self.game.state, self.game.player)
-        generate_tree(self.root, TREE_DEPTH)
+        self.root = AlfabetaNode(self.game.state, self.game.player)
+        generate_tree(self.root, self.calc_tree_depth())
 
         # Izvērtē mezglus, izmantojot algoritmu
         self.evaluate_node(self.root, True, float('-inf'), float('inf'))

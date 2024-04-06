@@ -2,8 +2,6 @@ from tree import TreeNode, generate_tree
 from game import get_opponent
 from heuristic_function import heuristic_function
 
-TREE_DEPTH = 3
-
 class MinimaxNode(TreeNode):
     def __init__(self, state, player, parent=None):
         TreeNode.__init__(self, state, player, parent)
@@ -30,9 +28,12 @@ class Minimax:
             self.game.circle_points == expected.circle_points and \
             self.game.cross_points == expected.cross_points
 
+    def calc_tree_depth(self):
+        return 5 if len(self.game.state) < 20 else 4
+
     def run_algorithm(self):
         self.root = MinimaxNode(self.game.state, self.game.player)
-        generate_tree(self.root, TREE_DEPTH)
+        generate_tree(self.root, self.calc_tree_depth())
 
         self.evaluate_node(self.root, True)
         self.path = self.find_optimal_path(self.root.heuristic_value)

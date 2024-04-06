@@ -1,7 +1,6 @@
 import wx
 import ui_generated
 import game
-import time
 
 class MainWindow(ui_generated.MainWindow):
     def __init__(self, parent):
@@ -14,8 +13,6 @@ class MainWindow(ui_generated.MainWindow):
         self.game = None
         self.chosen_player = None
         self.active_button = None
-        #gājiens button
-        self.active_player_label.SetLabel('O')
 
     def button_index(self, button):
         return self.game_field_panel.GetChildren().index(button)
@@ -85,8 +82,8 @@ class MainWindow(ui_generated.MainWindow):
         # Highlight buttons
         button.BackgroundColour = (179, 217, 255)
         button.GetNextSibling().BackgroundColour = (179, 217, 255)
-        # Wait 3 seconds before completing move
-        wx.CallLater(500, self.perform_computer_move_delayed, button)
+        # Wait 1.5 seconds before completing move
+        wx.CallLater(1500, self.perform_computer_move_delayed, button)
 
     def perform_computer_move_delayed(self, button):
         button.BackgroundColour = wx.NullColour
