@@ -26,11 +26,11 @@ class Game:
         move = self.state[index:index+2]
 
         if self.player == 'O' and move == 'XX':
-            self.circle_points += 1
+            self.circle_points += 2
         elif self.player == 'O' and move == 'XO':
             self.cross_points -= 1
         elif self.player == 'X' and move == 'OO':
-            self.cross_points += 1
+            self.cross_points += 2
         elif self.player == 'X' and move == 'OX':
             self.circle_points -= 1
         else:
