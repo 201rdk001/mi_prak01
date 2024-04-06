@@ -2,7 +2,6 @@ import wx
 import ui_generated
 import game
 import time
-import threading
 
 class MainWindow(ui_generated.MainWindow):
     def __init__(self, parent):
@@ -16,13 +15,7 @@ class MainWindow(ui_generated.MainWindow):
         self.chosen_player = None
         self.active_button = None
         #gājiens button
-        self.m_toggleBtn1.SetLabel('O')
-        #punktus pielikt
-        self.game = game.Game(
-            int(self.start_dialog.length_num_box.Value),
-            self.start_dialog.get_selected_algorithm())
-        self.m_staticText3.SetLabel(str(self.game.cross_points))    #krusts
-        self.m_staticText6.SetLabel(str(self.game.circle_points))    #aplis
+        self.active_player_label.SetLabel('O')
 
     def button_index(self, button):
         return self.game_field_panel.GetChildren().index(button)
@@ -36,6 +29,11 @@ class MainWindow(ui_generated.MainWindow):
             int(self.start_dialog.length_num_box.Value),
             self.start_dialog.get_selected_algorithm())
 
+        # Initalize labels
+        self.active_player_label.SetLabel(str(self.game.player))
+        self.circle_points_label.SetLabel(str(self.game.circle_points)) # Circle
+        self.cross_points_label.SetLabel(str(self.game.cross_points))   # Cross
+
         game_field = self.game_field_panel.GetSizer().GetChildren()[0].Sizer
         game_field.Clear(True)
 
@@ -45,15 +43,59 @@ class MainWindow(ui_generated.MainWindow):
                 label=character,
                 pos=wx.DefaultPosition,
                 size=(24, 24),
-                style=wx.BORDER_NONE)
+                style=wx.BORDER_DEFAULT)
 
             button.Bind(wx.EVT_TOGGLEBUTTON, self.on_game_field_button_clicked)
             game_field.Add(button, 0, wx.ALIGN_CENTER_VERTICAL, 5)
 
         self.game_field_panel.Layout()
 
+        if (self.chosen_player != 'O'):
+            self.perform_computer_move()
+
+    def perform_move(self, button):
+        if self.game.has_ended:
+            return
+
+        button.GetNextSibling().Destroy()
+        button.Label = self.game.player
+        button.Value = False
+        self.game_field_panel.Layout()
+
+        self.game.execute_move(self.button_index(button))
+        self.active_player_label.SetLabel(str(self.game.player))
+        self.circle_points_label.SetLabel(str(self.game.circle_points)) # Circle
+        self.cross_points_label.SetLabel(str(self.game.cross_points))   # Cross
+
+        if self.game.has_ended:
+            self.on_game_completed()
+        elif self.game.player != self.chosen_player:
+            self.perform_computer_move()
+
+    def perform_person_move(self):
+        if self.active_button and self.active_button.Value:
+            self.perform_move(self.active_button)
+            self.active_button = None
+
+    def perform_computer_move(self):
+        self.perform_move_button.Disable()
+
+        index = self.game.generate_computer_move()
+        button: wx.ToggleButton = self.get_button(index)
+        # Highlight buttons
+        button.BackgroundColour = (179, 217, 255)
+        button.GetNextSibling().BackgroundColour = (179, 217, 255)
+        # Wait 3 seconds before completing move
+        wx.CallLater(500, self.perform_computer_move_delayed, button)
+
+    def perform_computer_move_delayed(self, button):
+        button.BackgroundColour = wx.NullColour
+        self.perform_move(button)
+        self.perform_move_button.Enable()
+        self.active_button = None
+
     def on_game_field_button_clicked(self, event):
-        button = event.EventObject
+        button: wx.ToggleButton = event.EventObject
 
         if not button.GetNextSibling():
             button.Value = False
@@ -77,66 +119,12 @@ class MainWindow(ui_generated.MainWindow):
                 self.active_button.Value = False
 
     def on_perform_move_clicked(self, event):
-        
-        if self.game.has_ended:
-            return
-
-        button = self.active_button
-
-        if button and button.Value:
-            button.GetNextSibling().Destroy()
-            button.Label = self.game.player
-            button.Value = False
-            self.game_field_panel.Layout()
-
-            self.active_button = None
-            self.game.execute_move(self.button_index(button))
-            #nomainīt, kuram gājiens
-            self.m_toggleBtn1.SetLabel(game.get_opponent(self.start_dialog.get_selected_player()))
-            #punktus pielikt
-            self.game = game.Game(
-            int(self.start_dialog.length_num_box.Value),
-            self.start_dialog.get_selected_algorithm())
-            self.m_staticText3.SetLabel(str(self.game.cross_points))    #krusts
-            self.m_staticText6.SetLabel(str(self.game.circle_points))    #aplis
-            if self.game.has_ended:
-                self.on_game_completed()
-
-        
-    def perform_computer_move(self,event):
-        
-        if self.game.has_ended:
-            return
-        
-        button = self.get_button(self.game.generate_computer_move())
-        #iezime pogas
-        button.BackgroundColour = (252, 140, 71) 
-        button.GetNextSibling().BackgroundColour = (252, 140, 71)
-        #gaida 3sek pirms izdzēš
-        #timer = threading.Timer(3.0, button.GetNextSibling().Destroy())
-        #timer.start()
-        #button.BackgroundColour = button.GetNextSibling().BackgroundColour
-        button.GetNextSibling().Destroy()
-        button.Label = self.game.player
-        button.style=wx.BORDER_NONE
-        self.game_field_panel.Layout()
-        self.game.execute_move(self.button_index(button))
-        #nomainīt, kuram gājiens
-        self.m_toggleBtn1.SetLabel(self.start_dialog.get_selected_player())
-        #punktus pielikt
-        self.game = game.Game(
-            int(self.start_dialog.length_num_box.Value),
-            self.start_dialog.get_selected_algorithm())
-        self.m_staticText3.SetLabel(str(self.game.cross_points))    #krusts
-        self.m_staticText6.SetLabel(str(self.game.circle_points))    #aplis
-        if self.game.has_ended:
-            self.on_game_completed()
+        self.perform_person_move()
 
     def on_new_game_clicked(self, event):
         self.start_dialog.Show()
 
     def on_game_completed(self):
-        # Game completion code here
         self.game_over_dialog.ShowModal()
 
 class GameStartDialog(ui_generated.GameStartDialog):

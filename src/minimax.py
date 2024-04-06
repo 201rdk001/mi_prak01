@@ -2,7 +2,7 @@ from tree import TreeNode, generate_tree
 from game import get_opponent
 from heuristic_function import heuristic_function
 
-TREE_DEPTH = 7
+TREE_DEPTH = 3
 
 class MinimaxNode(TreeNode):
     def __init__(self, state, player, parent=None):

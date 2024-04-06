@@ -1,15 +1,23 @@
+def get_opponent(player):
+    return 'X' if player == 'O' else 'O'
+
 import random
+import minimax
 
 class Game:
     def __init__(self, length, algorithm):
         self.player = 'O'
-        self.algorithm = algorithm
         self.move_counter = 0
 
         self.has_ended = False
         self.state = ''.join(random.choice(['X', 'O']) for _ in range(length))
         self.circle_points = 0
         self.cross_points = 0
+
+        if algorithm == 'minimax':
+            self.algorithm = minimax.Minimax(self)
+        else:
+            raise RuntimeError("Alfabeta not implemented")
 
     def get_opponent(self):
         return get_opponent(self.player)
@@ -35,7 +43,8 @@ class Game:
 
     def generate_computer_move(self):
         # Temporary dummy implementation
-        return self.state.find(self.get_opponent())
+        return self.algorithm.generate_move()
+        # return self.state.find(self.get_opponent())
     
     def get_winner(self):
         if self.circle_points>self.cross_points:
@@ -43,9 +52,4 @@ class Game:
         elif self.circle_points<self.cross_points:
             return 'X'
         else:
-            return "neizšķirts"
-        
-
-
-def get_opponent(player):
-    return 'X' if player == 'O' else 'O'
+            return "Neizšķirts"
