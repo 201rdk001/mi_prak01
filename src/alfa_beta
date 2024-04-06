@@ -4,12 +4,12 @@ from heuristic_function import heuristic_function
 
 TREE_DEPTH = 7
 
-class MinimaxNode(TreeNode):
+class Alfa_Beta(TreeNode):
     def __init__(self, state, player, parent=None):
         TreeNode.__init__(self, state, player, parent)
         self.heuristic_value = None
 
-class Minimax:
+class Alfa_Beta:
     def __init__(self, game):
         self.game = game
 
