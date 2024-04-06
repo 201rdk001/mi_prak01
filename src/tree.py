@@ -34,10 +34,10 @@ def generate_tree(node, depth):
         move = node.state[i:i+2]
 
         if player == 'O' and move == 'XX':
-            generate_tree(new_child(node, i, 1, 0), depth - 1)
+            generate_tree(new_child(node, i, 2, 0), depth - 1)
         elif player == 'O' and move == 'XO':
             generate_tree(new_child(node, i, 0, -1), depth - 1)
         elif player == 'X' and move == 'OO':
-            generate_tree(new_child(node, i, 0, 1), depth - 1)
+            generate_tree(new_child(node, i, 0, 2), depth - 1)
         elif player == 'X' and move == 'OX':
             generate_tree(new_child(node, i, -1, 0), depth - 1)
