@@ -64,7 +64,7 @@ def update_scores(symbol, pattern, score_o, score_x):
             score_x -= 1
     else:
         if pattern == 'OO':
-            score_x += 1
+            score_x += 2
         else:
             score_o -= 1
     return score_o, score_x
