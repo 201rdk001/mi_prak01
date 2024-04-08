@@ -122,7 +122,9 @@ class MainWindow(ui_generated.MainWindow):
         self.start_dialog.Show()
 
     def on_game_completed(self):
+        self.game_over_dialog.set_winner(self.game)
         self.game_over_dialog.ShowModal()
+         
 
 class GameStartDialog(ui_generated.GameStartDialog):
     def get_selected_player(self):
@@ -140,8 +142,18 @@ class GameOverDialog(ui_generated.GameOverDialog):
     def __init__(self, parent):
         ui_generated.GameOverDialog.__init__(self, parent)
         self.start_dialog = GameStartDialog(self)
-        self.m_staticText4.SetLabel("Uzvarēja: "+ str(game.get_opponent(game.get_opponent(game.Game.get_winner))))
-        self.m_staticText3.SetLabel("Zaudēja: "+str(game.get_opponent(game.Game.get_winner)))
+
+    def set_winner(self,game):
+        if game.get_winner() =='O':
+            self.m_staticText4.SetLabel("Uzvarēja: O")
+            self.m_staticText3.SetLabel("Zaudēja: X")
+        if game.get_winner() =='X':
+            self.m_staticText4.SetLabel("Uzvarēja: X")
+            self.m_staticText3.SetLabel("Zaudēja: O")
+        #neizšķirts
+        else:
+            self.m_staticText4.SetLabel("Neizšķirts")
+            self.m_staticText3.SetLabel(" ")
     def on_new_game_clicked(self, event):
         self.Hide()
         self.Parent.start_dialog.Show()

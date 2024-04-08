@@ -48,9 +48,10 @@ class Game:
         # return self.state.find(self.get_opponent())
     
     def get_winner(self):
-        if self.circle_points>self.cross_points:
+        if self.circle_points > self.cross_points:
             return 'O'
-        elif self.circle_points<self.cross_points:
+        elif self.circle_points < self.cross_points:
             return 'X'
         else:
             return "Neizšķirts"
+        
