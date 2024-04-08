@@ -1,12 +1,10 @@
-from tree import TreeNode, generate_tree
+from tree import TreeNode, generate_tree, partial_regenerate_tree
 from game import get_opponent
 from heuristic_function import heuristic_function
 
-TREE_DEPTH = 7
-
 class AlfabetaNode(TreeNode):
-    def __init__(self, state, player, parent=None):
-        TreeNode.__init__(self, state, player, parent)
+    def __init__(self, state=None, player=None, parent=None, game=None):
+        TreeNode.__init__(self, state, player, parent, game)
         self.heuristic_value = None
 
 class Alfabeta:
@@ -15,35 +13,60 @@ class Alfabeta:
 
         self.root = None
         self.leafs = []
-        self.path = None
+        self.path = []
+        self.visited_node_count = 0
 
     def generate_move(self):
-        if not self.root or not self.was_expected_move(self.path.pop()):
+        self.visited_node_count = 0
+
+        if not self.root or not self.was_expected_move(self.path[-1]):
             self.run_algorithm()
-            self.path.pop()
 
         return self.path.pop().changed_index
 
+    def are_nodes_equal(self, a, b):
+        return \
+            a.state == b.state and \
+            a.circle_points == b.circle_points and \
+            a.cross_points == b.cross_points
+
     def was_expected_move(self, expected):
         # Pārbauda, vai pēdējais gājiens atbilst gaidītajam
-        return \
-            self.game.state == expected.state and \
-            self.game.circle_points == expected.circle_points and \
-            self.game.cross_points == expected.cross_points
+        return self.are_nodes_equal(self.game, expected)
 
     def calc_tree_depth(self):
-        return 5 if len(self.game.state) < 20 else 4
+        return 6 if len(self.game.state) < 20 else 5
+
+    def prepare_tree(self):
+        self.leafs = []
+
+        if len(self.path) > 0 and self.path[-1].player == self.game.player:
+            # Ģenerēt/paplašināt koku no neparedzētā gājiena virsones
+            for child in self.path[-1].parent.children:
+                if self.are_nodes_equal(self.game, child):
+                    self.root = child
+                    self.root.parent = None
+                    partial_regenerate_tree(self.root, self.calc_tree_depth())
+                    return
+
+            raise RuntimeError("Player move missing")
+        else:
+            # Ģenerēt pilnīgi jaunu koku
+            self.root = AlfabetaNode(game=self.game)
+            generate_tree(self.root, self.calc_tree_depth())
 
     def run_algorithm(self):
         # Izveido saknes mezglu un koku
-        self.root = AlfabetaNode(self.game.state, self.game.player)
-        generate_tree(self.root, self.calc_tree_depth())
-
+        self.prepare_tree()
         # Izvērtē mezglus, izmantojot algoritmu
         self.evaluate_node(self.root, True, float('-inf'), float('inf'))
+        # Izvēlas optimālo (īsāko) uzvaras ceļu
         self.path = self.find_optimal_path(self.root.heuristic_value)
+        self.path.pop()
 
     def evaluate_node(self, node, is_max, alpha, beta):
+        self.visited_node_count += 1
+
         if len(node.children) == 0:
             self.leafs.append(node)
             node.heuristic_value = heuristic_function(node, get_opponent(self.game.player))

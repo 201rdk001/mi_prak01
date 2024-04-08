@@ -39,13 +39,14 @@ class Game:
 
         self.state = self.state[:index] + self.player + self.state[index+2:]
         self.player = self.get_opponent()
-        self.move_counter += 1
-        self.has_ended = self.player not in self.state[:-1]
+        self.has_ended = self.get_opponent() not in self.state[:-1]
 
     def generate_computer_move(self):
-        # Temporary dummy implementation
-        return self.algorithm.generate_move()
-        # return self.state.find(self.get_opponent())
+        # TODO: measure the time taken by the computer to perform a move
+        # Start timing here
+        move = self.algorithm.generate_move()
+        # End timing here
+        return move
     
     def get_winner(self):
         if self.circle_points > self.cross_points:

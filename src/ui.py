@@ -122,6 +122,10 @@ class MainWindow(ui_generated.MainWindow):
         self.start_dialog.Show()
 
     def on_game_completed(self):
+        self.active_player_label.SetLabel(str(self.game.player))
+        self.circle_points_label.SetLabel(str(self.game.circle_points)) # Circle
+        self.cross_points_label.SetLabel(str(self.game.cross_points))   # Cross
+
         self.game_over_dialog.set_winner(self.game)
         self.game_over_dialog.ShowModal()
          
@@ -143,17 +147,17 @@ class GameOverDialog(ui_generated.GameOverDialog):
         ui_generated.GameOverDialog.__init__(self, parent)
         self.start_dialog = GameStartDialog(self)
 
-    def set_winner(self,game):
+    def set_winner(self, game):
         if game.get_winner() =='O':
             self.m_staticText4.SetLabel("Uzvarēja: O")
             self.m_staticText3.SetLabel("Zaudēja: X")
-        if game.get_winner() =='X':
+        elif game.get_winner() =='X':
             self.m_staticText4.SetLabel("Uzvarēja: X")
             self.m_staticText3.SetLabel("Zaudēja: O")
-        #neizšķirts
         else:
             self.m_staticText4.SetLabel("Neizšķirts")
             self.m_staticText3.SetLabel(" ")
+
     def on_new_game_clicked(self, event):
         self.Hide()
         self.Parent.start_dialog.Show()
