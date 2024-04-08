@@ -54,8 +54,6 @@ def generate_tree(node, depth):
 
 
 def partial_regenerate_tree(node, depth):
-    node.clear_calculated_values()
-
     if len(node.children) > 0:
         for child in node.children:
             partial_regenerate_tree(child, depth - 1)

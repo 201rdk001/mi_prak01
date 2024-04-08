@@ -1,3 +1,4 @@
+import threading
 import wx
 import ui_generated
 import game
@@ -7,12 +8,13 @@ class MainWindow(ui_generated.MainWindow):
         ui_generated.MainWindow.__init__(self, parent)
         self.game_over_dialog = GameOverDialog(self)
         self.start_dialog = GameStartDialog(self)
-        self.Show()
-        self.start_dialog.Show()
 
         self.game = None
         self.chosen_player = None
         self.active_button = None
+
+        self.Show()
+        self.start_dialog.ShowModal()
 
     def button_index(self, button):
         return self.game_field_panel.GetChildren().index(button)
@@ -47,8 +49,10 @@ class MainWindow(ui_generated.MainWindow):
 
         self.game_field_panel.Layout()
 
-        if (self.chosen_player != 'O'):
-            self.perform_computer_move()
+        if self.chosen_player != 'O':
+            self.game_field_panel.Disable()
+            self.perform_move_button.Disable()
+            threading.Thread(target=self.perform_computer_move, daemon=True).start()
 
     def perform_move(self, button):
         if self.game.has_ended:
@@ -67,7 +71,9 @@ class MainWindow(ui_generated.MainWindow):
         if self.game.has_ended:
             self.on_game_completed()
         elif self.game.player != self.chosen_player:
-            self.perform_computer_move()
+            self.game_field_panel.Disable()
+            self.perform_move_button.Disable()
+            threading.Thread(target=self.perform_computer_move, daemon=True).start()
 
     def perform_person_move(self):
         if self.active_button and self.active_button.Value:
@@ -75,20 +81,22 @@ class MainWindow(ui_generated.MainWindow):
             self.active_button = None
 
     def perform_computer_move(self):
-        self.perform_move_button.Disable()
-
         index = self.game.generate_computer_move()
+        wx.CallAfter(self.start_computer_move_animation, index)
+
+    def start_computer_move_animation(self, index):
         button: wx.ToggleButton = self.get_button(index)
         # Highlight buttons
-        button.BackgroundColour = (179, 217, 255)
-        button.GetNextSibling().BackgroundColour = (179, 217, 255)
+        button.BackgroundColour = (128, 191, 255)
+        button.GetNextSibling().BackgroundColour = (128, 191, 255)
         # Wait 1.5 seconds before completing move
-        wx.CallLater(1500, self.perform_computer_move_delayed, button)
+        wx.CallLater(1500, self.end_computer_move_animation, button)
 
-    def perform_computer_move_delayed(self, button):
+    def end_computer_move_animation(self, button):
         button.BackgroundColour = wx.NullColour
         self.perform_move(button)
         self.perform_move_button.Enable()
+        self.game_field_panel.Enable()
         self.active_button = None
 
     def on_game_field_button_clicked(self, event):
@@ -128,7 +136,7 @@ class MainWindow(ui_generated.MainWindow):
 
         self.game_over_dialog.set_winner(self.game)
         self.game_over_dialog.ShowModal()
-         
+
 
 class GameStartDialog(ui_generated.GameStartDialog):
     def get_selected_player(self):
@@ -145,7 +153,6 @@ class GameStartDialog(ui_generated.GameStartDialog):
 class GameOverDialog(ui_generated.GameOverDialog):
     def __init__(self, parent):
         ui_generated.GameOverDialog.__init__(self, parent)
-        self.start_dialog = GameStartDialog(self)
 
     def set_winner(self, game):
         if game.get_winner() =='O':
@@ -160,5 +167,5 @@ class GameOverDialog(ui_generated.GameOverDialog):
 
     def on_new_game_clicked(self, event):
         self.Hide()
-        self.Parent.start_dialog.Show()
+        self.Parent.start_dialog.ShowModal()
         event.Skip()
