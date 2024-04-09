@@ -52,6 +52,8 @@ class MainWindow(ui_generated.MainWindow):
         if self.chosen_player != 'O':
             self.game_field_panel.Disable()
             self.perform_move_button.Disable()
+            self.new_game_button.Disable()
+            self.game_field_panel.Update()
             threading.Thread(target=self.perform_computer_move, daemon=True).start()
 
     def perform_move(self, button):
@@ -70,10 +72,20 @@ class MainWindow(ui_generated.MainWindow):
 
         if self.game.has_ended:
             self.on_game_completed()
-        elif self.game.player != self.chosen_player:
+            return True
+
+        if self.game.player != self.chosen_player:
             self.game_field_panel.Disable()
             self.perform_move_button.Disable()
+            self.new_game_button.Disable()
+            self.game_field_panel.Update()
             threading.Thread(target=self.perform_computer_move, daemon=True).start()
+        else:
+            self.game_field_panel.Enable()
+            self.perform_move_button.Enable()
+            self.new_game_button.Enable()
+
+        return False
 
     def perform_person_move(self):
         if self.active_button and self.active_button.Value:
@@ -94,10 +106,19 @@ class MainWindow(ui_generated.MainWindow):
 
     def end_computer_move_animation(self, button):
         button.BackgroundColour = wx.NullColour
-        self.perform_move(button)
-        self.perform_move_button.Enable()
-        self.game_field_panel.Enable()
+        ended = self.perform_move(button)
         self.active_button = None
+
+        if ended:
+            self.game_field_panel.Disable()
+            self.perform_move_button.Disable()
+            self.new_game_button.Disable()
+            self.game_field_panel.Update()
+            return
+
+        self.game_field_panel.Enable()
+        self.perform_move_button.Enable()
+        self.new_game_button.Enable()
 
     def on_game_field_button_clicked(self, event):
         button: wx.ToggleButton = event.EventObject
@@ -127,7 +148,7 @@ class MainWindow(ui_generated.MainWindow):
         self.perform_person_move()
 
     def on_new_game_clicked(self, event):
-        self.start_dialog.Show()
+        self.start_dialog.ShowModal()
 
     def on_game_completed(self):
         self.active_player_label.SetLabel(str(self.game.player))
