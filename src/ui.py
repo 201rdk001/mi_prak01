@@ -12,7 +12,6 @@ class MainWindow(ui_generated.MainWindow):
         self.game = None
         self.chosen_player = None
         self.active_button = None
-        self.first_move = True
 
         self.Show()
         self.start_dialog.ShowModal()
@@ -95,16 +94,9 @@ class MainWindow(ui_generated.MainWindow):
 
     def end_computer_move_animation(self, button):
         button.BackgroundColour = wx.NullColour
-        if not self.first_move:
-            self.perform_move_button.Enable()
-            self.game_field_panel.Enable()
-
         self.perform_move(button)
-
-        if not self.first_move:
-            self.perform_move_button.Enable()
-            self.game_field_panel.Enable()
-
+        self.perform_move_button.Enable()
+        self.game_field_panel.Enable()
         self.active_button = None
 
     def on_game_field_button_clicked(self, event):
